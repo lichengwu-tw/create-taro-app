@@ -1,6 +1,6 @@
 {
   "name": "create-taro-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "keywords": [
     "taro",
     "redux-saga",
@@ -11,6 +11,7 @@
     "type": "git",
     "url": "https://github.com/lichengwu-tw/create-taro-app.git"
   },
+  "author": "mike wu",
   "license": "MIT",
   "engines": {
     "node": ">=8"
@@ -19,14 +20,17 @@
     "url": ""
   },
   "files": [
-    "index.js"
+    "src/index.js",
+    "src/generate.js",
+    "src/util.js"
   ],
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "babel-node index.js"
+    "start": "babel-node src/index.js",
+    "build": "babel src --out-dir bin"
   },
   "bin": {
-    "create-taro-app": "./index.js"
+    "create-taro-app": "./bin/index.js"
   },
   "dependencies": {
     "chalk": "2.4.2",

@@ -3,9 +3,9 @@ import  commander from "commander";
 import  fs from "fs";
 import { execSync } from "child_process";
 import path from "path";
-const version = require("./package.json").version;
-import { setProjectName, mode, type, compareVersion } from "./src/util";
-import { dir } from "./src/generate";
+const version = require("../package.json").version;
+import { setProjectName, mode, type, compareVersion } from "./util";
+import { dir } from "./generate";
 
 commander
   .version(version, "-V, --version")

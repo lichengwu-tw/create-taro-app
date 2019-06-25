@@ -22,25 +22,6 @@ export async function setProjectName(dir) {
   }
 }
 
-// export async function setFileName(dir) {
-//   const viewsPath = path.resolve(__dirname, "../src/views/");
-//   let { filename } = await inquirer.prompt({
-//     name: "filename",
-//     message: "input file name"
-//   });
-//   filename = filename.split(".")[0];
-//   global["filename"] = filename;
-//   if (!filename) {
-//     console.log("\n please input dir".green + "\n");
-//     await setFileName();
-//   } else if (fs.existsSync(`${viewsPath}/${filename}.js`)) {
-//     console.log("\n the dir has exists, please input another one".green + "\n");
-//     await setFileName();
-//   } else {
-//     return filename;
-//   }
-// }
-
 /**
  * select mode
  */
@@ -64,7 +45,7 @@ export async function mode() {
  */
 export function type(mode) {
   return {
-    "taro-redux-typescript": "/src/template/taro-redux-typescript",
+    "taro-redux-typescript": "../template/taro-redux-typescript",
   }[mode];
 }
 
