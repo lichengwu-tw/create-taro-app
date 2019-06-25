@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import * as ncp from 'ncp';
 import * as ora from 'ora';
 import * as fs from 'fs';
