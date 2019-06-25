@@ -26,7 +26,7 @@
     "start": "babel-node index.js"
   },
   "bin": {
-    "create-taro-app": "index.js"
+    "create-taro-app": "./index.js"
   },
   "dependencies": {
     "chalk": "2.4.2",
