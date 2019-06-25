@@ -1,6 +1,6 @@
 {
   "name": "create-taro-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "keywords": [
     "taro",
     "redux-saga",
@@ -27,10 +27,10 @@
   "main": "src/index.js",
   "scripts": {
     "start": "babel-node src/index.js",
-    "build": "babel src --out-dir bin"
+    "build": "babel src --out-dir lib"
   },
   "bin": {
-    "create-taro-app": "./bin/index.js"
+    "create-taro-app": "./lib/index.js"
   },
   "dependencies": {
     "chalk": "2.4.2",
