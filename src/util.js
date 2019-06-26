@@ -1,79 +1,47 @@
 #!/usr/bin/env node
-import * as fs from "fs";
-import * as path from "path";
+const fs = require("fs");
+const path = require("path");
 const inquirer = require("inquirer");
+const download = require("download-git-repo");
+const ora = require("ora");
+const spinner = ora();
 
 /**
- * if hasn't projectName ,set one
+ *  download Template
  */
-export async function setProjectName(dir) {
-  const { projectName } = await inquirer.prompt({
-    name: "projectName",
-    message: "input project name"
-  });
-  global["projectName"] = projectName;
-  if (!projectName) {
-    console.log("\n please input dir".green + "\n");
-    await setProjectName();
-  } else if (fs.existsSync(projectName)) {
-    console.log("\n the dir has exists, please input another one".green + "\n");
-    await setProjectName();
-  } else {
-    return projectName;
+
+function downloadTemplate(params) {
+  const { repoUrl, dir } = params;
+  spinner.start("loading");
+  let isHasDir = fs.existsSync(path.resolve(dir));
+  if (isHasDir) {
+    spinner.fail("current dir is already existed!");
+    return false;
   }
-}
-
-/**
- * select mode
- */
-export async function mode() {
-  return await inquirer.prompt({
-    name: "flag",
-    message: "select a mode",
-    type: "list",
-    choices: [
-      {
-        name: "taro + redux-saga + typescript",
-        value: "taro-redux-typescript"
-      }
-    ]
+  // start to download template file
+  // https://shadownc.github.io/2018/06/14/nodejs%E6%90%AD%E5%BB%BA%E7%AE%80%E6%98%93%E8%84%9A%E6%89%8B%E6%9E%B6%E9%81%87%E5%88%B0%E5%BE%97%E5%9D%91/
+  download(repoUrl, dir, { clone: true }, function(err) {
+    if (err) {
+      console.log(err);
+      spinner.fail(err);
+      return false;
+    }
+    spinner.succeed("下载完毕");
+    console.log("\x1b[31m", "Project download finished");
+    console.log("\x1b[32m", "=====================");
+    console.log();
+    console.log("To get started");
+    console.log();
+    console.log("\x1b[31m", `    cd ${dir}`);
+    console.log();
+    console.log("\x1b[31m", `    yarn && npm install`);
+    console.log();
+    console.log("\x1b[31m", "    yarn && npm run start");
   });
 }
 
-/**
- * file directory
- * @param mode
- */
-export function type(mode) {
-  return {
-    "taro-redux-typescript": "../template/taro-redux-typescript",
-  }[mode];
+function updateTemplateFile(){
+
 }
 
-/**
- * node version need > 8
- * @param version
- */
-export function compareVersion(version) {
-  return Number(version.split(".")[0]) >= 8;
-}
-
-/**
- * render view
- * @param filename
- * @param viewsPath
- */
-export function renderView(filename, viewsPath) {
-  const name = filename.slice(0, 1).toUpperCase() + filename.slice(1);
-  fs.writeFileSync(
-    `${viewsPath}/${filename}.jsx`,
-    `import React from 'react'
-export default class ${name} extends React.PureComponent {
-  render() {
-    return ${name}
-  }
-}
-  `
-  );
-  console.log(`${filename}.jsx has been rendered at ${viewsPath}`.green);
-}
+exports.downloadTemplate = downloadTemplate;

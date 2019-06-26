@@ -1,6 +1,6 @@
 {
   "name": "create-taro-app",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "keywords": [
     "taro",
     "redux-saga",
@@ -9,7 +9,7 @@
   "description": "Create Taro app with no build configuration.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lichengwu-tw/create-taro-app.git"
+    "url": "https://github.com/lichengwu-tw/create-taro-app"
   },
   "author": "mike wu",
   "license": "MIT",
@@ -20,22 +20,25 @@
     "url": ""
   },
   "files": [
-    "src/index.js",
-    "src/generate.js",
-    "src/util.js"
+    "bin/util.js",
+    "bin/templates.js",
+    "bin/index.js"
   ],
-  "main": "bin/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "babel-node src/index.js",
+    "prepublish": "npm run build",
+    "start": "node src/index.js",
     "build": "babel src --out-dir bin"
   },
   "bin": {
     "create-taro-app": "bin/index.js"
+  
   },
   "dependencies": {
     "chalk": "2.4.2",
     "commander": "2.19.0",
     "cross-spawn": "6.0.5",
+    "download-git-repo": "^2.0.0",
     "envinfo": "7.1.0",
     "fs-extra": "7.0.1",
     "hyperquest": "2.1.3",

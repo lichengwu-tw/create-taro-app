@@ -1,68 +1,62 @@
 #!/usr/bin/env node
-import  commander from "commander";
-import  fs from "fs";
-import { execSync } from "child_process";
-import path from "path";
-const version = require("../package.json").version;
-import { setProjectName, mode, type, compareVersion } from "./util";
-import { dir } from "./generate";
-
-commander
-  .version(version, "-V, --version")
-  .usage("[Options] | [Commands] <file>");
-
-commander
-  .command("init")
-  .description("generation a taro project")
-  .option("dir");
-
-commander.on("--help", function() {
-  console.log("\n Examples:");
-  console.log("");
-  console.log("  $ create-taro-app -h");
-  console.log("  $ create-taro-app init taro-demo ");
-  console.log("");
-});
-
-function help() {
-  commander.parse(process.argv);
-  if (commander.args.length < 1) return commander.help();
-}
-help();
-
-export const release = async () => {
-  const nodeVersion = execSync("node -v", { encoding: "utf8" });
-  if (process.argv.length === 2) {
-    execSync("create-taro-app -h");
-  }
-  if (!compareVersion(nodeVersion)) {
-    console.log("Please make sure the node version is above 8.0".red);
-    process.exit();
-  }
-  const argv2 = process.argv[2];
-  const argv3 = process.argv[3];
-  if (argv2 === "init") {
-    let projectName = argv3;
-    if (!projectName) {
-      projectName = await setProjectName();
-    } else if (fs.existsSync(projectName)) {
-      console.log(
-        "\n the dir has exists, please input another one".green + "\n"
-      );
-      projectName = await setProjectName();
-    }
-
-    const reactMode = await mode();
-    projectName = projectName || global["projectName"];
-    fs.mkdirSync(projectName);
-    const currentPath = path.resolve(__dirname, "..");
-    const directory = currentPath + type(reactMode.flag);
-    dir(directory, projectName);
-  }
-};
-release().catch(err => {
-  console.error(err);
-  process.exit();
-});
+const commander = require("commander");
+const inquirer = require("inquirer");
+const { downloadTemplate } = require("./util");
+const templates = require("./templates");
 
 commander.parse(process.argv);
+
+let dir = commander.args[0];
+
+const questions = [
+  {
+    type: "input",
+    name: "name",
+    message: "项目名称",
+    default: "默认: taro-demo",
+    validate: name => {
+      if (/^[a-z]+/.test(name)) {
+        return true;
+      } else {
+        return "项目名称必须以小写字母开头";
+      }
+    }
+  },
+  {
+    type: "input",
+    name: "package",
+    message: "package name",
+    validate: name => {
+      if (/^[a-z]+/.test(name)) {
+        return true;
+      } else {
+        return "package名称必须以小写字母开头";
+      }
+    }
+  },
+  {
+    type: "input",
+    name: "version",
+    message: "version",
+    default: "1.0.0",
+    validate: name => {
+      if (/^[0-9]\.[0-9]\.[0-9]/.test(name)) {
+        return true;
+      } else {
+        return "版本号格式必须是x.y.z 请参考：https://semver.org/lang/zh-CN/";
+      }
+    }
+  },
+  {
+    name: "value",
+    message: "选择一个模版",
+    type: "list",
+    choices: templates
+  }
+];
+
+inquirer.prompt(questions).then(answers => {
+  console.log(answers);
+  const { name, value } = answers;
+  downloadTemplate({ repoUrl: value, dir: name });
+});
